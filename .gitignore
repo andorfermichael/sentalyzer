@@ -22,6 +22,9 @@ data/*
 # Installer logs
 pip-log.txt
 
+# Logs
+smm.log
+
 # Unit test / coverage reports
 .coverage
 .tox
