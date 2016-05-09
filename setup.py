@@ -18,6 +18,8 @@ setup(
         'gevent',
         'gevent-socketio',
         'flask',
-        'argcomplete'
+        'argcomplete',
+        'pymongo == 2.8.1',
+        'twitter'
     ],
 )
