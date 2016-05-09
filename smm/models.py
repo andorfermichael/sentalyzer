@@ -4,7 +4,7 @@ from bson import ObjectId
 import datetime
 import hashlib
 import pickle
-import StringIO
+from io import StringIO
 
 from smm import config
 from smm.classifier import labels
@@ -114,7 +114,7 @@ class TrainedClassifiers(mongoengine.Document):
     stats = mongoengine.DictField()
 
     def set_classifier(self, classifier):
-        s = StringIO.StringIO(pickle.dumps(classifier))
+        s = io.StringIO(pickle.dumps(classifier).encode('utf-8'))
         self.classifier.put(s)
 
     def get_classifier(self):
