@@ -1,4 +1,4 @@
 __author__ = 'gx'
 
-positive = 'positive'
-negative = 'negative'
+positive = 'pos'
+negative = 'neg'
