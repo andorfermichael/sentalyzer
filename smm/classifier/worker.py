@@ -1,6 +1,4 @@
-from nltk.tree import _child_names
-
-__author__ = 'gx'
+__author__ = 'gx & ma'
 
 from multiprocessing import Process
 import time
@@ -49,15 +47,13 @@ class ClassifierWorker(Process):
         self.logger.debug('ClassifiedStream saved %s', row.id)
 
     def get_classifications(self, text):
-        features = config.classifier_tokenizer.getFeatures(text)
+        sentiment_value = self.sentiment(text)
+        if labels.negative == sentiment_value:
+            return -1.00
+        else:
+            return 1.00
 
-        prob = self.classifier.prob_classify(features)
+    def sentiment(self, text):
+        feats = config.classifier_tokenizer.getFeatures(text)
 
-        classified_label = self.classifier.classify(features)
-        polarity = prob.prob(classified_label)
-
-        if labels.negative == classified_label:
-            polarity *= -1
-
-
-        return polarity
+        return self.classifier.classify(feats)
