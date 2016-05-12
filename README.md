@@ -1,52 +1,30 @@
-Streamcrab
+Sentalyzer
 ==========
 
-Streamcrab is a realtime twitter sentiment analyzer
-
-This is the second version of the tool, and it is rewritten completely from previous version
-(still available in legacy branch)
-
-Demo: http://www.streamcrab.com
-
-Changes from previous version
------------------------------
-
-- Supports MaxEnt and Bayes classifiers (defaults to MaxEnt)
-- Simplified tweets collection (see `Collecting raw Tweets`)
-- Simplified trainer (see `Train classifier`)
-- Build in HTTP Server & frontend based on gevent and Flask
-- Unittests tested
-- Utilization of multi-core systems
-- Scalable (in theory :)
+Sentalyzer is a realtime twitter sentiment analyzer
 
 
 Requirements
 ------------
 
 - python 2.7
-- python2.7-dev
 - mongodb server
-
-
-Debian like systems:
-
-    apt-get install python2.7 python2.7-dev mongodb-server
 
 
 Checkout
 --------
-Checkout latest streamcrab branch from github
+Checkout latest sentalyzer master branch from github
 
 
-    git clone https://github.com/cyhex/streamcrab.git ./streamcrab
-    cd streamcrab
+    git clone https://github.com/andorfermichael/sentalyzer.git ./sentalyzer
+    cd sentalyzer
 
 
 Configure
 ---------
-copy smm/config.default.py to smm/config.py and edit smm/config.py according to your needs
+copy smm/config-sample.py to smm/config.py and edit smm/config.py according to your needs
 
-    cp smm/config.default.py smm/config.py
+    cp smm/config-sample.py smm/config.py
     nano smm/config.py
 
 
@@ -66,31 +44,23 @@ Run unittests
     python -m unittest discover tests
 
 
-Collecting raw Tweets
+Collecting/Providing raw data
 ---------------------
-The base of data training is an assumption that tweets with happy emoticons :) are positive and tweets
-with sad :( emoticons have negative sentiment polarity
+Provide data in raw format e.g.
+    data/hotel_reviews/pos/pos0001.txt
+    data/hotel_reviews/neg/neg0001.txt
 
-Wether this assumption is correct or not is outside the scope of this document.
+Provide data in serialized format e.g.
+    data/pickles/naivebayes_classifier.pickle
+    data/pickles/bernoullinb_classifier.pickle
 
-Collect 2000 'happy' tweets
-
-    python toolbox/collect-tweets.py happy 2000
-
-Collect 2000 'sad' tweets
-
-    python toolbox/collect-tweets.py sad 2000
-
-for more options see
-
-    python toolbox/collect-classifier.py --help
-
+The raw data is the recommended way since it reduces errors at a minimum
 
 Train classifier
 ----------------
-Create and save new classifier trained from collected tweets
+Create and save new classifier trained from raw data (or pickled classifiers)
 
-    python toolbox/train-classifier.py maxEntTestCorpus 2000
+    python toolbox/train-classifier.py myClassifier numberOfDocuments
 
 for more options see
 
@@ -111,12 +81,12 @@ open browser on http://127.0.0.1:5000
 
 Show stats
 ----------
-Show detailed info on collected Tweets and saved classifiers
+Show detailed info on saved classifiers
 
     python toolbox/show-classifiers.py
 
 Its worth mention that `Training data size` is the size of the trained classifier after it has been
-serialized (pickled) whit protocol=1 actual Memory Usage may vary...
+serialized (pickled) with highest protocol actual Memory Usage may vary...
 
 
 
@@ -160,11 +130,6 @@ for more options see
     python toolbox/shell-classifier.py --help
 
 
-Training and testing results
-----------------------------
-see : https://github.com/cyhex/streamcrab/blob/master/docs/acurracy_tests.md
-
-
 Production & deployment
 -----------------------
 Run everything behind nginx >= 1.3.13, automate processes management with supervisord.
@@ -184,3 +149,8 @@ Links, Sources etc
 - http://nginx.org/en/docs/http/websocket.html
 - http://supervisord.org/
 
+
+Credits
+-----------------------------
+
+This project is based on the [Streamcrab Project](https://github.com/cyhex/streamcrab) written by [Cyphex](https://github.com/cyhex)
