@@ -1,3 +1,4 @@
+__author__ = 'gx'
 from nltk import corpus
 from nltk import PorterStemmer
 from nltk import wordpunct_tokenize
