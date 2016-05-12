@@ -78,7 +78,7 @@ Create and save new classifier trained from raw data (or pickled classifier)
 
 Load and save new classifier from already trained raw data (or pickled classifier)
 
-    python toolbox/store-pickle-classifier-in-database.py myClassifier numberOfDocuments
+    python toolbox/store-trained-classifier-in-database.py myClassifier numberOfDocuments
 
 for more options see
 
