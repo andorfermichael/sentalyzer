@@ -117,8 +117,7 @@ input{
 }
 
 input.loading{
-    background-color: #ffffff
-    background: url("/static/img/loader.gif") no-repeat right center;
+    background: #ffffff url("/static/img/loader.gif") no-repeat scroll right center !important;
 }
 a {color: #4183C4;}
 
