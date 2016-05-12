@@ -2,12 +2,12 @@ from setuptools import setup, find_packages
 
 setup(
     name='smm',
-    version='0.2',
+    version='0.1',
     packages=['smm'],
-    url='https://github.com/cyhex/streamcrab',
+    url='https://github.com/andorfermichael/sentalyzer',
     license='GPLv3',
-    author='Timor A.',
-    author_email='timor@cyhex.com',
+    author='Michael Andorfer',
+    author_email='mandorfer.mmt-b2014@fh-salzburg.ac.at',
     description='Real-Time, multi-lingual Twitter sentiment analyzer engine',
     install_requires=[
         "requests",
@@ -21,5 +21,5 @@ setup(
         'argcomplete',
         'pymongo == 2.8.1',
         'twitter'
-    ],
+    ]
 )
