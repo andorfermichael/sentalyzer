@@ -1,91 +1,171 @@
 #!/usr/bin/env python
 # PYTHON_ARGCOMPLETE_OK
 
-__author__ = 'gx'
+__author__ = 'gx & ma'
 
-import nltk
 import argparse
 import argcomplete
 import sys
-import io
 
-from smm.classifier.textprocessing import TwitterMixin
 from smm import models
-from smm.classifier import labels
-from smm.config import classifier_tokenizer as tokenizer
+from smm.classifier import classification
 from smm import config
 
-parser = argparse.ArgumentParser(description='Classify collected raw tweets', usage='python train-classifier.py myClassifier 1000')
+import random
+import logging
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.corpus import CategorizedPlaintextCorpusReader
+from nltk.tokenize import word_tokenize
+
+parser = argparse.ArgumentParser(description='Classify collected reviews', usage='python train-classification.py classifier 10000')
 parser.add_argument('name', help='Classifier name - must be unique')
-parser.add_argument('size', type=int, help='Corpus size - how much tweets to classify')
-parser.add_argument('-t', '--type', help='Classifier type', default='maxent')
-parser.add_argument('-c', '--cutoff', type=float, default=-0.02, required=False, help='Log Likelihood cutoff')
-parser.add_argument('-s', '--source', default=None, required=False, help="Classify from csv file")
+parser.add_argument('size', type=int, help='Corpus size - how much documents to classify')
+parser.add_argument('-t', '--type', help='Classifier type', default='naivebayes')
 args = parser.parse_args()
 
 argcomplete.autocomplete(parser)
 
+# Define logger
+logger = logging.getLogger('train-classifier')
+
+# Load the reviews
+pos_corpus = CategorizedPlaintextCorpusReader(config.reviews_path + '/pos/', r'(?!\.).*\.txt', cat_pattern=r'(pos)/.*', encoding='ascii')
+neg_corpus = CategorizedPlaintextCorpusReader(config.reviews_path + '/neg/', r'(?!\.).*\.txt', cat_pattern=r'(neg)/.*', encoding='ascii')
+
+pos_reviews = pos_corpus.raw()
+neg_reviews = neg_corpus.raw()
+
+# Define arrays for words and documents
+all_words = []
+documents = []
+
+# j is adject, r is adverb, and v is verb
+# allowed_word_types = ["J","R","V"]
+allowed_word_types = ["J", "R", "V"]
+
+# Get English stopwords
+stops = set(stopwords.words('english'))
+
+# Annotate positive documents
+logger.info('Start creating documents out of positive reviews.')
+for p in pos_reviews.split('\n'):
+    documents.append((p, "pos"))
+
+    # Split up into words
+    words = word_tokenize(p)
+
+    # Tag words (e.g. noun, verb etc.)
+    pos = nltk.pos_tag(words)
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
+logger.info('Finished creating documents out of positive reviews.')
+
+# Annotate negative documents
+logger.info('Start creating documents out of negative reviews.')
+for p in neg_reviews.split('\n'):
+    documents.append((p, "neg"))
+
+    # Split up into words
+    words = word_tokenize(p)
+
+    # Tag words (e.g. noun, verb etc.)
+    pos = nltk.pos_tag(words)
+    for w in pos:
+        if w[1][0] in allowed_word_types:
+            all_words.append(w[0].lower())
+logger.info('Finished creating documents out of negative reviews.')
+
+# Calculate the frequency of each word
+all_words = nltk.FreqDist(all_words)
+
+# Get the 10,000 most frequent words
+logger.info('Create word feature set of 10,000 most frequent words.')
+word_features = list(all_words.keys())[:10000]
+
+# Search for features in documents
+def find_features(document):
+    words = word_tokenize(document)
+    features = {}
+    for w in word_features:
+        features[w] = (w in words)
+
+    return features
+
+# Create a feature set
+logger.info('Start creating feature set from documents.')
+featuresets = [(find_features(rev), category) for (rev, category) in documents]
+logger.info('Finished creating feature set from documents.')
+
+# Shuffle features
+random.shuffle(featuresets)
+
+# Define how many of the features are training data and how many are test data
+number_of_training_documents = int(len(documents) * 95 / 100)
+number_of_test_documents = int(len(documents) * 5 / 100)
+
+# Define the training set
+logger.info('Create training set of ' + str(number_of_training_documents) + ' documents.')
+training_set = featuresets[:number_of_training_documents]
+
+# Define the test set
+logger.info('Create testing set of ' + str(number_of_test_documents) + ' documents.')
+testing_set = featuresets[number_of_test_documents:]
+
+cls = classification.Classifier(training_set, testing_set)
+
 models.connect()
 
-if not args.source and models.TrainDataRaw.objects(polarity=1).count() < args.size:
-    print "There is only %d positive tweeets in DB" % models.TrainDataRaw.objects(polarity=1).count()
-    print "Reduce Corpus size or collect more tweets using toolbox/collect-tweets.py"
-    sys.exit()
-
-if not args.source and models.TrainDataRaw.objects(polarity=-1).count() < args.size:
-    print "There is only %d negative tweeets in DB" % models.TrainDataRaw.objects(polarity=-1).count()
-    print "Reduce Corpus size or collect more tweets using toolbox/collect-tweets.py"
-    sys.exit()
-
-if not args.source and models.TrainedClassifiers.objects(name = args.name).count():
+if models.TrainedClassifiers.objects(name = args.name).count():
     print "TrainedClassifier already exists with name %s try to different name" % args.name
     sys.exit()
 
+if args.type == 'naivebayes':
+    cls.run_naivebayes(True)
 
-def apply_features(row):
-    return (feature_extractor(row.text), row.get_label())
+elif args.type == 'multinomialnb':
+    cls.run_multinomialnb(True)
 
-# TODO: move to parsers
-if args.source:
-    featureset = []
-    f = io.open(args.source)
-    c = 0
-    for l in f.readlines():
-        pos, id, posScore, negScore, synsetTerm, gloss = l.split('\t')
+elif args.type == 'bernoullinb':
+    cls.run_bernoullinb(True)
 
-        c += 1
+elif args.type == 'logisticregression':
+    cls.run_logisticregression(True)
 
-        if c == 1:
-            continue
+elif args.type == 'sgd':
+    cls.run_sgd(True)
 
-        gloss = TwitterMixin.make_plain(gloss)
-        print negScore
-        negScore = float(negScore)
-        posScore = float(posScore)
+elif args.type == 'linearsvc':
+    cls.run_linearsvc(True)
 
-        if posScore > negScore:
-            label = labels.positive
-        elif posScore < negScore:
-            label = labels.negative
-        else:
-            continue
+elif args.type == 'nusvc':
+    cls.run_nusvc(True)
 
-        featureset.append((tokenizer.getFeatures(gloss), label))
-
-else:
+elif args.type == 'votedclassifier':
+    naivebayes_classifier = cls.run_naivebayes(True)
+    mnb_classifier = cls.run_multinomialnb(True)
+    bernoullinb_classifier = cls.run_bernoullinb(True)
+    logisticregression_classifier = cls.run_logisticregression(True)
+    sgd_classifier = cls.run_sgd(True)
+    linearsvc_classifier = cls.run_linearsvc(True)
+    nusvc_classifier = cls.run_nusvc(True)
 
 
-    #featureset = nltk.apply_features(apply_features, models.TrainDataRaw.objects(polarity=1)[0:args.size])
-    #featureset += nltk.apply_features(apply_features, models.TrainDataRaw.objects(polarity=-1)[0:args.size])
-    featureset = [(tokenizer.getFeatures(row.text), labels.positive) for row in models.TrainDataRaw.objects(polarity=1).timeout(False)[0:args.size]]
-    featureset += [(tokenizer.getFeatures(row.text), labels.negative) for row in models.TrainDataRaw.objects(polarity=-1).timeout(False)[0:args.size]]
+    cls = VoteClassifier(
+        naivebayes_classifier,
+        mnb_classifier,
+        bernoullinb_classifier,
+        logisticregression_classifier,
+        sgd_classifier,
+        linearsvc_classifier,
+        nusvc_classifier
+    )
 
-if args.type == 'maxent':
-    # Train
-    # min_ll - Log Likelihood drop Training iterations if min_ll > -0.02
-    cls = nltk.MaxentClassifier.train(featureset, min_ll=args.cutoff)
-elif args.type == 'bayes':
-    cls = nltk.NaiveBayesClassifier.train(featureset)
+    votes_classifier_accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
+    logger.info("Voted Classifier accuracy is '{0}'." .format(votes_classifier_accuracy))
+
 else:
     print '%s is not valid classifier type' % args.type
     sys.exit()
@@ -95,10 +175,7 @@ row = models.TrainedClassifiers()
 row.name = args.name
 row.set_classifier(cls)
 row.stats = dict(
-    classifier=cls.__class__.__name__,
-    tokenizer=config.classifier_tokenizer.__name__,
-    sample_size=args.size * 2,
-    cutoff=args.cutoff
+    classifier = cls.__class__.__name__
 )
 
 row.save()
