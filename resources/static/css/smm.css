@@ -55,33 +55,33 @@ header.header nav a{
 #totals .chart{
     margin-right: 10px;
 }
-.totalsChart svg{
+.totals-chart svg{
     height: 300px;
     width: 400px;
 }
-.totalsChart {
+.totals-chart {
     float: left;
 }
 
-#trendChart{
+#trend-chart{
     width: auto;
     margin-left: 825px;
     height: 330px;
 }
 
 @media screen and (max-width: 1279px){
-    #trendChart{
+    #trend-chart{
         margin-left: 0px;
         clear: both;
         margin-top: 20px;
     }
 }
 
-#trendChart svg{
+#trend-chart svg{
     width: 100%;
 }
 
-#polarityChart svg{
+#polarity-chart svg{
     height: 400px;
 }
 
@@ -103,7 +103,7 @@ header.header nav a{
     padding-top: 10px;
 }
 
-#trackingForm{
+#tracking-form{
     margin-top: 20px;
     text-align: left;
     float: left;
@@ -128,15 +128,15 @@ a {color: #4183C4;}
     margin-top: 20px;
     background-color: white;
 }
-.txtLeft{
+.txt-left{
     text-align: left;
 }
 
-#errorMsg {
+#error-msg {
     text-align: center;
 }
 
-#errorMsg section{
+#error-msg section{
     margin: auto;
     color: #d62728;
     width: 450px;

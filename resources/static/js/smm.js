@@ -1,8 +1,8 @@
 
 var SMM = {
     streamChannel: {
-        stopTracking: '#stopTracking',
-        restartTracking: '#restartTracking',
+        stopTracking: '#stop-tracking',
+        restartTracking: '#restart-tracking',
         stream: null,
         listen: function(kw) {
 
@@ -14,8 +14,8 @@ var SMM = {
                 SMM.streamData.push(data);
             });
             SMM.stream.on('error', function(data) {
-                $('#errorMsg section').html(data)
-                $('#errorMsg').slideDown();
+                $('#error-msg section').html(data)
+                $('#error-msg').slideDown();
                 $("#keyword").removeClass('loading');
                 SMM.stream.disconnect();
                 SMM.stream = null;
@@ -143,10 +143,10 @@ var SMM = {
     },
     charts: {
         chartPool: [],
-        sumChartContainer: '#sumChart svg',
-        countChartContainer: '#countChart svg',
-        polartyChartContainer: '#polarityChart svg',
-        trendChartContainer: '#trendChart svg',
+        sumChartContainer: '#sum-chart svg',
+        countChartContainer: '#count-chart svg',
+        polartyChartContainer: '#polarity-chart svg',
+        trendChartContainer: '#trend-chart svg',
         updateInt: 2000,
                 
         init: function() {

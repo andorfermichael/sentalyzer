@@ -10,44 +10,43 @@
     </head>
     <body>
         <header class="header">
-            <div id='logo'>
+            <div id="logo">
                 <h1><a href="/">Streamcrab</a></h1>
                 <span>Realtime, Twitter sentiment analysis engine</span>
             </div>
-            <form id="trackingForm" method="get" action="/results">
+            <form id="tracking-form" method="get" action="/results">
                 <div>
-                    <div class="txtLeft" ><strong>Searching for:</strong></div>
+                    <div class="txt-left" ><strong>Searching for:</strong></div>
                     <input type="text" name="keyword" value="{{keyword}}" id="keyword" class="loading">
                 </div>
                 <div class="row">
-                    <button id="stopTracking">Stop searching</button>
-                    <button id="restartTracking">Restart search</button>
+                    <button id="stop-tracking">Stop searching</button>
+                    <button id="restart-tracking">Restart search</button>
                 </div>
             </form>
         </header>
-        <div id='errorMsg' style="display: none;"><section></section></div>
-        <div class='row'></div>
-        <div class='row'>
-            <div id='totals' >
-                <div id="countChart" class='totalsChart chart'  >
+        <div id="error-msg" style="display: none;"><section></section></div>
+        <div class="row"></div>
+        <div class="row">
+            <div id="totals" >
+                <div id="count-chart" class="totals-chart chart">
                     <header>Tweet count in %</header>
                     <svg></svg>
                 </div>
-                <div id="sumChart" class='totalsChart chart' >
+                <div id="sum-chart" class="totals-chart chart">
                     <header>Polarity sums</header>
                     <svg></svg>
                 </div>
             </div>
-            <div id="trendChart" class="chart" >
+            <div id="trend-chart" class="chart" >
                 <header>Polarity trend over time</header>
                 <svg></svg>
             </div>
         </div>
-        <div id="polarityChart" class="chart" >
+        <div id="polarity-chart" class="chart" >
             <header>Polarity distribution over time</header>
             <svg></svg>
         </div>
-
         <script src="/static/js/jquery-1.10.2.min.js"></script>
         <script src="/static/js/socket.io.js"></script>
         <script src="/static/js/d3.v3.js"></script>
@@ -55,7 +54,7 @@
         <script src="/static/js/smm.js"></script>
         <script>
             SMM.htmlHelpers();
-            SMM.streamChannel.listen('{{keyword}}');
+            SMM.streamChannel.listen("{{keyword}}");
             SMM.charts.init();
         </script>
     </body>
