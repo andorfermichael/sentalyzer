@@ -1,13 +1,13 @@
 body{
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     background-image: url('../img/bg.png');
-    
+    font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif
 }
 
 header.header{
     text-align: center;
-    background-color: #eee;
+    background-color: #000000;
     border-bottom: 1px solid #aaa;
     padding: 10px;
      box-shadow: 0 0 10px 5px #CCCCCC;
@@ -17,7 +17,7 @@ header.header{
     position: relative;
     z-index: 1;
 }
-header.header nav {
+header.header nav{
     position: absolute;
     top: 112px;
     left: 30px;
@@ -32,17 +32,17 @@ header.header nav a{
 #logo{
     overflow: hidden;
     text-align: left;
-    color: #666;
+    color: #ffffff;
     width: 40%;
     float: left;
     padding: 20px;
 }
 #logo h1{
-    margin: 0px;
+    margin: 0;
 }
 #logo h1 a{
     text-decoration: none;
-    color: #333;
+    color: #ffffff;;
 }
 @media screen and (max-width: 620px){
     #logo{display: none;}
@@ -71,7 +71,7 @@ header.header nav a{
 
 @media screen and (max-width: 1279px){
     #trend-chart{
-        margin-left: 0px;
+        margin-left: 0;
         clear: both;
         margin-top: 20px;
     }
@@ -107,19 +107,24 @@ header.header nav a{
     margin-top: 20px;
     text-align: left;
     float: left;
+    color: #ffffff
 }
 
 input{
     border: 1px solid #aaa;
     padding: 2px;
+    width: 250px;
 }
 
 input.loading{
-    background-image: url("/static/img/loader.gif");
-    background-repeat: no-repeat;
-    background-position: right center;
+    background-color: #ffffff
+    background: url("/static/img/loader.gif") no-repeat right center;
 }
 a {color: #4183C4;}
+
+button {
+    width: 125px;
+}
 
 
 .infobox{
@@ -130,6 +135,7 @@ a {color: #4183C4;}
 }
 .txt-left{
     text-align: left;
+    color: #ffffff
 }
 
 #error-msg {
@@ -137,11 +143,10 @@ a {color: #4183C4;}
 }
 
 #error-msg section{
-    margin: auto;
     color: #d62728;
     width: 450px;
     background-color: #eee;
-    margin-top: -1px;
+    margin: -1px auto auto;
     border: 1px solid #aaa;
     border-top: none;
     padding: 10px;
