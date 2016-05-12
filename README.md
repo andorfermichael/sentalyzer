@@ -36,7 +36,6 @@ Download and install required libs and data
     python toolbox/setup-app.py
 
 
-
 Testing
 -------
 Run unittests
@@ -44,23 +43,42 @@ Run unittests
     python -m unittest discover tests
 
 
-Collecting/Providing raw data
+Providing data
 ---------------------
-Provide data in raw format e.g.
-    data/hotel_reviews/pos/pos0001.txt
-    data/hotel_reviews/neg/neg0001.txt
+Provide data in raw format e.g
+>data/hotel_reviews/pos/pos0001.txt
+ data/hotel_reviews/neg/neg0001.txt
 
 Provide data in serialized format e.g.
-    data/pickles/naivebayes_classifier.pickle
-    data/pickles/bernoullinb_classifier.pickle
+>data/pickles/naivebayes_classifier.pickle
+ data/pickles/bernoullinb_classifier.pickle
 
-The raw data is the recommended way since it reduces errors at a minimum
+The raw data is the recommended way since it reduces errors at a minimum.
+
+
+Available classifiers
+----------------
+- Naive Bayes (used in command as "naivebayes")
+- Multinomial Naive Bayes (used in command as "multinomialnb")
+- Bernoulli Naive Bayes (used in command as "bernoullinb")
+- Logistic Regression Classifier (used in command as "logisticregression")
+- Stochastic Gradient Descent (used in command as "sgd")
+- Linear Support Vector Classification (used in command as "linearsvc")
+- Nu Support Vector Classifcation (used in command as "nusvc")
+- Voted Classifier (used in command as "votedclassifier")
+
+The `Voted Classifier` combines the results of all above mentioned classifiers.
+
 
 Train classifier
 ----------------
-Create and save new classifier trained from raw data (or pickled classifiers)
+Create and save new classifier trained from raw data (or pickled classifier)
 
     python toolbox/train-classifier.py myClassifier numberOfDocuments
+
+Load and save new classifier from already trained raw data (or pickled classifier)
+
+    python toolbox/store-pickle-classifier-in-database.py myClassifier numberOfDocuments
 
 for more options see
 
@@ -130,14 +148,14 @@ for more options see
     python toolbox/shell-classifier.py --help
 
 
-Production & deployment
+Production & Deployment
 -----------------------
-Run everything behind nginx >= 1.3.13, automate processes management with supervisord.
+Run everything behind nginx >= 1.3.13, automate processes management with supervisor.
 
 Since nginx 1.3.13 supports websockets, so you should probably use latest stable version.
 
 This is only one way of many to deploy the app.
-in folder ex.conf there are sample config files for nginx and supervisord.
+in folder ex.conf there are sample config files for nginx and supervisor.
 
 
 Links, Sources etc
