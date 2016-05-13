@@ -65,9 +65,9 @@ Available classifiers
 - Stochastic Gradient Descent (used in command as "sgd")
 - Linear Support Vector Classification (used in command as "linearsvc")
 - Nu Support Vector Classifcation (used in command as "nusvc")
-- Voted Classifier (used in command as "votedclassifier")
+- Vote Classifier (used in command as "voteclassifier")
 
-The `Voted Classifier` combines the results of all above mentioned classifiers.
+The `Vote Classifier` combines the results of all above mentioned classifiers.
 
 
 Train classifier
