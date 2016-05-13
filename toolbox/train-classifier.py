@@ -22,7 +22,7 @@ from nltk.tokenize import word_tokenize
 parser = argparse.ArgumentParser(description='Classify collected reviews', usage='python train-classification.py classifier 10000')
 parser.add_argument('name', help='Classifier name - must be unique')
 parser.add_argument('size', type=int, help='Corpus size - how much documents to classify')
-parser.add_argument('-t', '--type', help='Classifier type', default='naivebayes')
+parser.add_argument('-t', '--type', help='Classifier type', default='voteclassifier')
 args = parser.parse_args()
 
 argcomplete.autocomplete(parser)
@@ -31,8 +31,8 @@ argcomplete.autocomplete(parser)
 logger = logging.getLogger('train-classifier')
 
 # Load the reviews
-pos_corpus = CategorizedPlaintextCorpusReader(config.reviews_path + '/pos/', r'(?!\.).*\.txt', cat_pattern=r'(pos)/.*', encoding='ascii')
-neg_corpus = CategorizedPlaintextCorpusReader(config.reviews_path + '/neg/', r'(?!\.).*\.txt', cat_pattern=r'(neg)/.*', encoding='ascii')
+pos_corpus = CategorizedPlaintextCorpusReader(config.basepath + config.reviews_path + '/pos/', r'(?!\.).*\.txt', cat_pattern=r'(pos)/.*', encoding='ascii')
+neg_corpus = CategorizedPlaintextCorpusReader(config.basepath + config.reviews_path + '/neg/', r'(?!\.).*\.txt', cat_pattern=r'(neg)/.*', encoding='ascii')
 
 pos_reviews = pos_corpus.raw()
 neg_reviews = neg_corpus.raw()
@@ -114,7 +114,7 @@ training_set = featuresets[:number_of_training_documents]
 logger.info('Create testing set of ' + str(number_of_test_documents) + ' documents.')
 testing_set = featuresets[number_of_test_documents:]
 
-cls = classification.Classifier(training_set, testing_set)
+cls = classification.Classifier(training_set, testing_set, args.type)
 
 models.connect()
 
@@ -123,27 +123,27 @@ if models.TrainedClassifiers.objects(name = args.name).count():
     sys.exit()
 
 if args.type == 'naivebayes':
-    cls.run_naivebayes(True)
+    resultClassifier = cls.run_naivebayes(True)
 
 elif args.type == 'multinomialnb':
-    cls.run_multinomialnb(True)
+    resultClassifier = cls.run_multinomialnb(True)
 
 elif args.type == 'bernoullinb':
-    cls.run_bernoullinb(True)
+    resultClassifier = cls.run_bernoullinb(True)
 
 elif args.type == 'logisticregression':
-    cls.run_logisticregression(True)
+    resultClassifier = cls.run_logisticregression(True)
 
 elif args.type == 'sgd':
-    cls.run_sgd(True)
+    resultClassifier = cls.run_sgd(True)
 
 elif args.type == 'linearsvc':
-    cls.run_linearsvc(True)
+    resultClassifier = cls.run_linearsvc(True)
 
 elif args.type == 'nusvc':
-    cls.run_nusvc(True)
+    resultClassifier = cls.run_nusvc(True)
 
-elif args.type == 'votedclassifier':
+elif args.type == 'voteclassifier':
     naivebayes_classifier = cls.run_naivebayes(True)
     mnb_classifier = cls.run_multinomialnb(True)
     bernoullinb_classifier = cls.run_bernoullinb(True)
@@ -152,8 +152,7 @@ elif args.type == 'votedclassifier':
     linearsvc_classifier = cls.run_linearsvc(True)
     nusvc_classifier = cls.run_nusvc(True)
 
-
-    cls = VoteClassifier(
+    resultClassifier = VoteClassifier(
         naivebayes_classifier,
         mnb_classifier,
         bernoullinb_classifier,
@@ -163,8 +162,9 @@ elif args.type == 'votedclassifier':
         nusvc_classifier
     )
 
-    votes_classifier_accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
-    logger.info("Voted Classifier accuracy is '{0}'." .format(votes_classifier_accuracy))
+    logger.info('Started accuracy calculation of Vote Classifier.')
+    resultClassifier.accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
+    logger.info('Started accuracy calculation of Vote Classifier.')
 
 else:
     print '%s is not valid classifier type' % args.type
@@ -173,9 +173,10 @@ else:
 # Save
 row = models.TrainedClassifiers()
 row.name = args.name
-row.set_classifier(cls)
+row.set_classifier(resultClassifier)
 row.stats = dict(
-    classifier = cls.__class__.__name__
+    classifier = cls.name,
+    accuracy = cls.accuracy
 )
 
 row.save()
