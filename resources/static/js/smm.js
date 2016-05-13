@@ -14,7 +14,7 @@ var SMM = {
                 SMM.streamData.push(data);
             });
             SMM.stream.on('error', function(data) {
-                $('#error-msg section').html(data)
+                $('#error-msg section').html(data);
                 $('#error-msg').slideDown();
                 $("#keyword").removeClass('loading');
                 SMM.stream.disconnect();
@@ -38,7 +38,7 @@ var SMM = {
             
             SMM.stream.emit('track', kw);
             SMM.streamData.clear();
-            SMM.charts.redraw()
+            SMM.charts.redraw();
 
             setInterval(function() {
                 if(SMM.stream){
@@ -53,17 +53,17 @@ var SMM = {
     streamData: {
         data: [],
         trend: {data: [], q: [], qSize: 10},
-        sums: {pCount: 0, nCount: 0, pSum: 0, nSum: 0, },
+        sums: {pCount: 0, nCount: 0, pSum: 0, nSum: 0 },
         getData: function() {
             var d = [
-                {key: 'Tweets', color: 'green', values: SMM.streamData.data, type: 'line'},
+                {key: 'Tweets', color: 'green', values: SMM.streamData.data, type: 'line'}
             ];
 
             return d;
         },
         getTrendData: function() {
             return [
-                {key: 'Polarity trend', color: 'gray', values: SMM.streamData.trend.data},
+                {key: 'Polarity trend', color: 'gray', values: SMM.streamData.trend.data}
             ];
         },
         getSumData: function() {
@@ -77,7 +77,7 @@ var SMM = {
                     value: SMM.streamData.sums.pSum},
                 {
                     key: 'Negative ',
-                    value: Math.abs(SMM.streamData.sums.nSum)},
+                    value: Math.abs(SMM.streamData.sums.nSum)}
             ];
         },
         getCountData: function() {
@@ -91,7 +91,7 @@ var SMM = {
                     value: (SMM.streamData.sums.pCount / t)*100},
                 {
                     key: 'Negative (%)',
-                    value: (SMM.streamData.sums.nCount / t)*100},
+                    value: (SMM.streamData.sums.nCount / t)*100}
             ];
         },
         push: function(data) {
@@ -125,7 +125,7 @@ var SMM = {
                 }
                 var c = 'green';
                 if (y_sum / container.qSize < 0) {
-                    var c = 'red';
+                    c = 'red';
                 }
                 var a = {
                     y: y_sum / container.qSize,
@@ -139,7 +139,7 @@ var SMM = {
         clear: function() {
             //SMM.streamData.data = [];
             //SMM.streamData.trend = { data:[], q : [], qSize: 10};
-        },
+        }
     },
     charts: {
         chartPool: [],
@@ -169,7 +169,7 @@ var SMM = {
 
                 chartSum.updateManual = function() {
                     d3.select(SMM.charts.sumChartContainer).datum(SMM.streamData.getSumData).transition().duration(200).call(chartSum);
-                }
+                };
                 chartSum.updateManual();
                 nv.utils.windowResize(chartSum.update);
                 SMM.charts.chartPool.push(chartSum);
@@ -186,7 +186,7 @@ var SMM = {
 
                 chartCount.updateManual = function() {
                     d3.select(SMM.charts.countChartContainer).datum(SMM.streamData.getCountData).transition().duration(200).call(chartCount);
-                }
+                };
                 chartCount.updateManual();
                 nv.utils.windowResize(chartCount.update);
                 SMM.charts.chartPool.push(chartCount);
@@ -231,7 +231,7 @@ var SMM = {
 
         },
         redraw: function() {
-            for (i in SMM.charts.chartPool) {
+            for (var i in SMM.charts.chartPool) {
                 SMM.charts.chartPool[i].update();
                 if (typeof SMM.charts.chartPool[i].updateManual === 'function') {
                     SMM.charts.chartPool[i].updateManual();
