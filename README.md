@@ -107,47 +107,6 @@ Its worth mention that `Training data size` is the size of the trained classifie
 serialized (pickled) with highest protocol actual Memory Usage may vary...
 
 
-
-Interactive shell
------------------
-You can directly interact with the trained classifier and get verbose output on how the score is calculated
-replace `maxEntTestCorpus` with desired classifier name see `Show stats` to display available classifiers
-
-    python toolbox/shell-classifier.py maxEntTestCorpus
-
-You should see:
-
-    exit: ctrl+c
-
-    Loaded maxEntTestCorpus
-    Classify:
-
-Type something and hit enter:
-
-    Classify: today is a bad day for this nation
-
-    Classification: negative with 53.29%
-
-    Feature                                          negativ positiv
-    ----------------------------------------------------------------
-    bad==1 (1)                                         0.074
-    today==1 (1)                                       0.027
-    day==1 (1)                                         0.008
-    bad==1 (1)                                                -0.178
-    nation==1 (1)                                              0.139
-    today==1 (1)                                              -0.035
-    day==1 (1)                                                -0.007
-    -----------------------------------------------------------------
-    TOTAL:                                             0.109  -0.081
-    PROBS:                                             0.533   0.467
-
-
-
-for more options see
-
-    python toolbox/shell-classifier.py --help
-
-
 Production & Deployment
 -----------------------
 Run everything behind nginx >= 1.3.13, automate processes management with supervisor.
@@ -171,4 +130,4 @@ Links, Sources etc
 Credits
 -----------------------------
 
-This project is based on the [Streamcrab Project](https://github.com/cyhex/streamcrab) written by [Cyphex](https://github.com/cyhex)
+This project is based on the [Streamcrab Project](https://github.com/cyhex/streamcrab) written by [cyphex](https://github.com/cyhex)
