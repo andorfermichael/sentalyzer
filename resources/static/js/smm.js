@@ -1,3 +1,38 @@
+var mapOptions = {
+  zoom: 3,
+  center: new google.maps.LatLng(8.881928, 76.592758),
+  mapTypeId: google.maps.MapTypeId.ROADMAP
+}
+var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+
+var positiveHeatMapData = [];
+var negativeHeatMapData = [];
+
+var positiveGradient = [
+    'rgba(152, 251, 152, 0)',
+    'rgba(135, 234, 135, 1)',
+    'rgba(118, 217, 118, 1)',
+    'rgba(101, 200, 101, 1)',
+    'rgba(84, 183, 84, 1)',
+    'rgba(67, 167, 67, 1)',
+    'rgba(50, 150, 50, 1)',
+    'rgba(33, 133, 33, 1)',
+    'rgba(16, 116, 16, 1)',
+    'rgba(0, 100, 0, 1)'
+];
+
+var negativeGradient = [
+    'rgba(255, 192, 203, 0)',
+    'rgba(240, 171, 180, 1)',
+    'rgba(225, 151, 158, 1)',
+    'rgba(211, 131, 136, 1)',
+    'rgba(196, 111, 113, 1)',
+    'rgba(182, 90, 91, 1)',
+    'rgba(167, 70, 69, 1)',
+    'rgba(153, 50, 46, 1)',
+    'rgba(138, 30, 24, 1)',
+    'rgba(124, 10, 2, 1)'
+];
 
 var SMM = {
     streamChannel: {
@@ -88,10 +123,12 @@ var SMM = {
             return [
                 {
                     key: 'Positive (%)',
-                    value: (SMM.streamData.sums.pCount / t)*100},
+                    value: (SMM.streamData.sums.pCount / t)*100
+                },
                 {
                     key: 'Negative (%)',
-                    value: (SMM.streamData.sums.nCount / t)*100}
+                    value: (SMM.streamData.sums.nCount / t)*100
+                }
             ];
         },
         push: function(data) {
@@ -102,9 +139,11 @@ var SMM = {
                 d0.color = 'red';
                 SMM.streamData.sums.nCount += 1;
                 SMM.streamData.sums.nSum += d0.y;
+                negativeHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
             } else {
                 SMM.streamData.sums.pCount += 1;
                 SMM.streamData.sums.pSum += d0.y;
+                positiveHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
             }
 
             SMM.streamData.data.push(d0);
@@ -165,8 +204,6 @@ var SMM = {
                     return d.value 
                 });
 
-
-
                 chartSum.updateManual = function() {
                     d3.select(SMM.charts.sumChartContainer).datum(SMM.streamData.getSumData).transition().duration(200).call(chartSum);
                 };
@@ -182,15 +219,12 @@ var SMM = {
                     return d.value 
                 });
 
-
-
                 chartCount.updateManual = function() {
                     d3.select(SMM.charts.countChartContainer).datum(SMM.streamData.getCountData).transition().duration(200).call(chartCount);
                 };
                 chartCount.updateManual();
                 nv.utils.windowResize(chartCount.update);
                 SMM.charts.chartPool.push(chartCount);
-                
                 
                 var chartDist = nv.models.scatterChart()
                         .showDistX(true)
@@ -221,8 +255,6 @@ var SMM = {
                 nv.utils.windowResize(chartTrend.update);
 
                 SMM.charts.chartPool.push(chartTrend);
-                
-
             });
 
             setInterval(function() {
@@ -232,18 +264,23 @@ var SMM = {
         },
         redraw: function() {
             for (var i in SMM.charts.chartPool) {
-                SMM.charts.chartPool[i].update();
                 if (typeof SMM.charts.chartPool[i].updateManual === 'function') {
                     SMM.charts.chartPool[i].updateManual();
                 }
-
             }
-        }
-    },
-    htmlHelpers: function(){
-        var _mye = atob('LXQtaS1tLW8tci1ALWMteS1oLWUteC0uLWMtby1tLQ==').replace(/-/g, '');
-        $(".mailMe").attr('href', 'mailto:' + _mye);
-    }
 
+            var positiveHeatmap = new google.maps.visualization.HeatmapLayer({
+              data: positiveHeatMapData
+            });
+            positiveHeatmap.setOptions({radius: 10, gradient: positiveGradient});
+            positiveHeatmap.setMap(map);
+
+            var negativeHeatmap = new google.maps.visualization.HeatmapLayer({
+              data: negativeHeatMapData
+            });
+            negativeHeatmap.setOptions({radius: 10, gradient: negativeGradient});
+            negativeHeatmap.setMap(map);
+        }
+    }
 };
 
