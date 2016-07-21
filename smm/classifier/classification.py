@@ -12,6 +12,7 @@ from smm import config
 from statistics import mode
 import pickle
 import logging
+import os
 
 class Classifier(object):
     def __init__(self, training_set, testing_set, name):
@@ -21,14 +22,21 @@ class Classifier(object):
         self.name = name
         self.accuracy = None
 
-    def run_naivebayes(self, pickled):
+    def run_naivebayes(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Naive Bayes Classifier.')
             naivebayes_classifier = nltk.classify.NaiveBayesClassifier.train(self.training_set)
             self.logger.info('Finished Naive Bayes Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/mnb_classifier.pickle.')
+                save_classifier = open("data/pickles/mnb_classifier.pickle", "wb")
+                pickle.dump(naivebayes_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Naive Bayes Classifier as pickle.')
         else:
             self.logger.info('Start loading of Naive Bayes Classifier from ' + config.basepath + config.pickles_path + '/naivebayes_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/naivebayes_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/naivebayes_classifier.pickle', 'rb')
             naivebayes_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Naive Bayes Classifier.')
@@ -39,15 +47,22 @@ class Classifier(object):
 
         return naivebayes_classifier
 
-    def run_multinomialnb(self, pickled):
+    def run_multinomialnb(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Multinomial Naive Bayes Classifier.')
             mnb_classifier = SklearnClassifier(MultinomialNB())
             mnb_classifier.train(self.training_set)
             self.logger.info('Finished Multinomial Naive Bayes Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Multinomial Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/mnb_classifier.pickle.')
+                save_classifier = open("data/pickles/mnb_classifier.pickle", "wb")
+                pickle.dump(mnb_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Multinomial Naive Bayes Classifier as pickle.')
         else:
             self.logger.info('Start loading of Multinomial Naive Bayes Classifier from ' + config.basepath + config.pickles_path + '/mnb_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/mnb_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/mnb_classifier.pickle', 'rb')
             mnb_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Multinomial Naive Bayes Classifier.')
@@ -58,15 +73,22 @@ class Classifier(object):
 
         return mnb_classifier
 
-    def run_bernoullinb(self, pickled):
+    def run_bernoullinb(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Bernoulli Naive Bayes Classifier.')
             bernoullinb_classifier = SklearnClassifier(BernoulliNB())
             bernoullinb_classifier.train(self.training_set)
             self.logger.info('Finished Bernoulli Naive Bayes Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Bernoulli Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/bernoullinb_classifier.pickle.')
+                save_classifier = open("data/pickles/bernoullinb_classifier.pickle", "wb")
+                pickle.dump(bernoullinb_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Bernoulli Naive Bayes Classifier as pickle.')
         else:
             self.logger.info('Start loading of Bernoulli Naive Bayes Classifier from ' + config.basepath + config.pickles_path + '/bernoullinb_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/bernoullinb_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/bernoullinb_classifier.pickle', 'rb')
             bernoullinb_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Bernoulli Naive Bayes Classifier.')
@@ -77,15 +99,22 @@ class Classifier(object):
 
         return bernoullinb_classifier
 
-    def run_logisticregression(self, pickled):
+    def run_logisticregression(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Logistic Regression Classifier.')
             logisticregression_classifier = SklearnClassifier(LogisticRegression())
             logisticregression_classifier.train(self.training_set)
             self.logger.info('Finished Logistic Regression Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Logistic Regression Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/logisticregression_classifier.pickle.')
+                save_classifier = open("data/pickles/logisticregression_classifier.pickle", "wb")
+                pickle.dump(logisticregression_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Logistic Regression Classifier as pickle.')
         else:
             self.logger.info('Start loading of Logistic Regression Classifier from ' + config.basepath + config.pickles_path + '/logisticregression_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/logisticregression_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/logisticregression_classifier.pickle', 'rb')
             logisticregression_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Logistic Regression Classifier.')
@@ -96,15 +125,22 @@ class Classifier(object):
 
         return logisticregression_classifier
 
-    def run_sgd(self, pickled):
+    def run_sgd(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Stochastic Gradient Descent Classifier.')
             sgd_classifier = SklearnClassifier(SGDClassifier())
             sgd_classifier.train(self.training_set)
             self.logger.info('Finished Stochastic Gradient Descent Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Stochastic Gradient Descent Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/sgd_classifier.pickle.')
+                save_classifier = open("data/pickles/sgd_classifier.pickle", "wb")
+                pickle.dump(sgd_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Stochastic Gradient Descent Classifier as pickle.')
         else:
             self.logger.info('Start loading of Stochastic Gradient Descent Classifier from ' + config.basepath + config.pickles_path + '/sgd_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/sgd_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/sgd_classifier.pickle', 'rb')
             sgd_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Stochastic Gradient Descent Classifier.')
@@ -115,15 +151,22 @@ class Classifier(object):
 
         return sgd_classifier
 
-    def run_linearsvc(self, pickled):
+    def run_linearsvc(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Linear Support Vector Classifier.')
             linearsvc_classifier = SklearnClassifier(LinearSVC())
             linearsvc_classifier.train(self.training_set)
             self.logger.info('Finished Linear Support Vector Classifier.')
+
+            if pickle:
+                self.logger.info('Start packing Linear Support Vector Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/linearsvc_classifier.pickle.')
+                save_classifier = open("data/pickles/linearsvc_classifier.pickle", "wb")
+                pickle.dump(linearsvc_classifier, save_classifier)
+                save_classifier.close()
+                self.logger.info('Finished packing Linear Support Vector Classifier as pickle.')
         else:
             self.logger.info('Start loading of Linear Support Vector Classifier ' + config.basepath + config.pickles_path + '/linearsvc_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/linearsvc_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/linearsvc_classifier.pickle', 'rb')
             linearsvc_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Linear Support Vector Classifier.')
@@ -134,15 +177,23 @@ class Classifier(object):
 
         return linearsvc_classifier
 
-    def run_nusvc(self, pickled):
+    def run_nusvc(self, pickled, pickle):
         if pickled:
             self.logger.info('Start Nu Support Vector Classifier.')
             nusvc_classifier = SklearnClassifier(NuSVC())
             nusvc_classifier.train(self.training_set)
             self.logger.info('Finished Nu Support Vector Classifier.')
+
+            if pickle:
+                if pickle:
+                    self.logger.info('Start packing Nu Support Vector Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/nusvc_classifier.pickle.')
+                    save_classifier = open("data/pickles/nusvc_classifier.pickle", "wb")
+                    pickle.dump(nusvc_classifier, save_classifier)
+                    save_classifier.close()
+                    self.logger.info('Finished packing Nu Support Vector Classifier as pickle.')
         else:
             self.logger.info('Start loading of Nu Support Vector Classifier ' + config.basepath + config.pickles_path + '/nusvc_classifier.pickle.')
-            open_file = open(config.basepath + config.pickles_path + "/nusvc_classifier.pickle", "rb")
+            open_file = open(config.basepath + config.pickles_path + '/nusvc_classifier.pickle', 'rb')
             nusvc_classifier = pickle.load(open_file)
             open_file.close()
             self.logger.info('Finished loading of Nu Support Vector Classifier.')
@@ -157,21 +208,17 @@ class Classifier(object):
 
 class VoteClassifier(ClassifierI):
     def __init__(self, *classifiers):
-        #self.logger = logging.getLogger('classifier')
         self._classifiers = classifiers
         self.accuracy = None
 
     def classify(self, features):
-        #self.logger.info('Start Voted Classifier.')
         votes = []
         for c in self._classifiers:
             v = c.classify(features)
             votes.append(v)
-        #self.logger.info('Finished Voted Classifier.')
         return mode(votes)
 
     def confidence(self, features):
-        #self.logger.info('Start calculation of Voted Classifier accuracy.')
         votes = []
         for c in self._classifiers:
             v = c.classify(features)
@@ -179,5 +226,4 @@ class VoteClassifier(ClassifierI):
 
         choice_votes = votes.count(mode(votes))
         conf = choice_votes / len(votes)
-        #self.logger.info('Finished calculation of Voted Classifier accuracy.')
         return conf

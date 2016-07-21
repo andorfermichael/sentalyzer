@@ -30,7 +30,7 @@ argcomplete.autocomplete(parser)
 logger = logging.getLogger('store-pickled-classifier-in-database')
 
 # Load documents from file
-logger.info('Start loading of documents  from ' + config.basepath + config.pickles_path + '/documents.pickle.')
+logger.info('Start loading of documents from ' + config.basepath + config.pickles_path + '/documents.pickle.')
 documents_f = open(config.basepath + config.pickles_path + "/documents.pickle", "rb")
 documents = pickle.load(documents_f)
 documents_f.close()
@@ -54,7 +54,7 @@ def find_features(document):
 
 # Load feature set from file
 logger.info('Start loading of featureset from ' + config.basepath + config.pickles_path + '/featuresets.pickle.')
-featuresets_f = open(config.basepath + config.pickles_path + "/featuresets.pickle", "rb")
+featuresets_f = open(config.basepath + config.pickles_path + '/featuresets.pickle', 'rb')
 featuresets = pickle.load(featuresets_f)
 featuresets_f.close()
 logger.info('Finished loading of featureset.')
@@ -124,7 +124,7 @@ elif args.type == 'voteclassifier':
 
     logger.info('Started accuracy calculation of Vote Classifier.')
     resultClassifier.accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
-    logger.info('Started accuracy calculation of Vote Classifier.')
+    logger.info('Finished accuracy calculation of Vote Classifier.')
 
 else:
     print '%s is not valid classifier type' % args.type
