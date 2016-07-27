@@ -35,11 +35,11 @@ class TwitterWorker(DataStreamAbstract):
         self.kw_last_check = time.time()
 
     def run(self):
-        logger.info("started %s", self.getName())
+        logger.info('started %s', self.getName())
 
         while True:
             if self.terminate.isSet():
-                logger.info("Terminated")
+                logger.info('Terminated')
                 return None
 
             try:
@@ -52,15 +52,15 @@ class TwitterWorker(DataStreamAbstract):
 
             except TwitterWorkerKwEmpty, e:
                 sleep_int = config.twitter_kw_interval_check / 2
-                logger.warn("%s - sleeping for %d sec", e.message, sleep_int)
+                logger.warn('%s - sleeping for %d sec', e.message, sleep_int)
                 time.sleep(sleep_int)
 
             except TwitterStreamHttpException, e:
-                logger.warn("%s - sleeping for %d sec", e.message, config.twitter_http_error_sleep)
+                logger.warn('%s - sleeping for %d sec', e.message, config.twitter_http_error_sleep)
                 time.sleep(config.twitter_http_error_sleep)
 
             except TwitterWorkerTerminate:
-                logger.info("Terminated")
+                logger.info('Terminated')
                 return None
             except Exception, e:
                 logger.warn(e.message)
@@ -99,7 +99,7 @@ class TwitterWorker(DataStreamAbstract):
             o.source = StreamSource.TWITTER
             o.text = tweet['text']
             o.save()
-            logger.debug("RawStreamQueue saved with id %s", o.id)
+            logger.debug('RawStreamQueue saved with id %s', o.id)
 
     def is_tweet_valid(self, tweet):
         if tweet and not 'delete' in tweet and 'lang' in tweet and tweet['lang'] == 'en' and 'text' in tweet and tweet['geo'] != None:

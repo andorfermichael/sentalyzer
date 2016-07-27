@@ -24,7 +24,7 @@ class TwitterStreamHandler(object):
         self.auth = OAuth1(config.twitter_oauth_custkey, config.twitter_oauth_custsecret,
                            config.twitter_oauth_token, config.twitter_oauth_secret)
 
-        self.request = requests.post(self.streamUri, data={'track': ",".join(keywords)}, stream=True, auth=self.auth)
+        self.request = requests.post(self.streamUri, data={'track': ','.join(keywords)}, stream=True, auth=self.auth)
 
         if self.request.status_code != 200:
             raise TwitterStreamHttpException('HTTP code %s' % self.request.status_code,

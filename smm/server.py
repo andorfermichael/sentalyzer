@@ -93,6 +93,6 @@ def stream(remaining):
     try:
         socketio_manage(request.environ, {'/stream': StreamNamespace}, request)
     except:
-        logger.error("Exception while handling socketio connection", exc_info=True)
+        logger.error('Exception while handling socketio connection', exc_info=True)
 
     return Response()

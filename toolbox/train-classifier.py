@@ -199,7 +199,7 @@ elif args.type == 'voteclassifier':
 
     if pickle:
         logger.info('Start packing Vote Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/vote_classifier.pickle.')
-        save_classifier = open("data/pickles/naivebayes_classifier.pickle", "wb")
+        save_classifier = open('data/pickles/naivebayes_classifier.pickle', 'wb')
         pickle.dump(resultClassifier, save_classifier)
         save_classifier.close()
         logger.info('Finished packing Vote Classifier as pickle.')

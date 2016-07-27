@@ -11,7 +11,7 @@ from smm.classifier import labels
 
 
 class StreamSource(object):
-    TWITTER = "twitter"
+    TWITTER = 'twitter'
 
 
 class MongoEngineDictMx(object):

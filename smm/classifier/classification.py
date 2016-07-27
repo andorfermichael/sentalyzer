@@ -30,7 +30,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/mnb_classifier.pickle.')
-                save_classifier = open("data/pickles/mnb_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/mnb_classifier.pickle', 'wb')
                 pickle.dump(naivebayes_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Naive Bayes Classifier as pickle.')
@@ -56,7 +56,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Multinomial Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/mnb_classifier.pickle.')
-                save_classifier = open("data/pickles/mnb_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/mnb_classifier.pickle', 'wb')
                 pickle.dump(mnb_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Multinomial Naive Bayes Classifier as pickle.')
@@ -82,7 +82,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Bernoulli Naive Bayes Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/bernoullinb_classifier.pickle.')
-                save_classifier = open("data/pickles/bernoullinb_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/bernoullinb_classifier.pickle', 'wb')
                 pickle.dump(bernoullinb_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Bernoulli Naive Bayes Classifier as pickle.')
@@ -108,7 +108,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Logistic Regression Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/logisticregression_classifier.pickle.')
-                save_classifier = open("data/pickles/logisticregression_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/logisticregression_classifier.pickle', 'wb')
                 pickle.dump(logisticregression_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Logistic Regression Classifier as pickle.')
@@ -134,7 +134,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Stochastic Gradient Descent Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/sgd_classifier.pickle.')
-                save_classifier = open("data/pickles/sgd_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/sgd_classifier.pickle', 'wb')
                 pickle.dump(sgd_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Stochastic Gradient Descent Classifier as pickle.')
@@ -160,7 +160,7 @@ class Classifier(object):
 
             if pickle:
                 self.logger.info('Start packing Linear Support Vector Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/linearsvc_classifier.pickle.')
-                save_classifier = open("data/pickles/linearsvc_classifier.pickle", "wb")
+                save_classifier = open('data/pickles/linearsvc_classifier.pickle', 'wb')
                 pickle.dump(linearsvc_classifier, save_classifier)
                 save_classifier.close()
                 self.logger.info('Finished packing Linear Support Vector Classifier as pickle.')
@@ -187,7 +187,7 @@ class Classifier(object):
             if pickle:
                 if pickle:
                     self.logger.info('Start packing Nu Support Vector Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/nusvc_classifier.pickle.')
-                    save_classifier = open("data/pickles/nusvc_classifier.pickle", "wb")
+                    save_classifier = open('data/pickles/nusvc_classifier.pickle', 'wb')
                     pickle.dump(nusvc_classifier, save_classifier)
                     save_classifier.close()
                     self.logger.info('Finished packing Nu Support Vector Classifier as pickle.')

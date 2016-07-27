@@ -9,7 +9,7 @@ logger = logging.getLogger('')
 monkey.patch_all()
 
 try:
-    server = SocketIOServer((config.server_host, config.server_port), app, resource="socket.io",
+    server = SocketIOServer((config.server_host, config.server_port), app, resource='socket.io',
                             transports=config.server_socketio_handlers, policy_server=False)
     logger.info('Serving at http://%s:%s' % (config.server_host, config.server_port))
     server.serve_forever()

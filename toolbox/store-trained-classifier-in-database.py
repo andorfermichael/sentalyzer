@@ -31,14 +31,14 @@ logger = logging.getLogger('store-pickled-classifier-in-database')
 
 # Load documents from file
 logger.info('Start loading of documents from ' + config.basepath + config.pickles_path + '/documents.pickle.')
-documents_f = open(config.basepath + config.pickles_path + "/documents.pickle", "rb")
+documents_f = open(config.basepath + config.pickles_path + '/documents.pickle', 'rb')
 documents = pickle.load(documents_f)
 documents_f.close()
 logger.info('Finished loading of documents.')
 
 # Load features from file
 logger.info('Start loading of word features from ' + config.basepath + config.pickles_path + '/word_features.pickle.')
-word_features_f = open(config.basepath + config.pickles_path + "/word_features.pickle", "rb")
+word_features_f = open(config.basepath + config.pickles_path + '/word_features.pickle', 'rb')
 word_features = pickle.load(word_features_f)
 word_features_f.close()
 logger.info('Finished loading of word features.')
@@ -79,7 +79,7 @@ cls = classification.Classifier(training_set, testing_set, args.type)
 models.connect()
 
 if models.TrainedClassifiers.objects(name = args.name).count():
-    print "TrainedClassifier already exists with name %s try to different name" % args.name
+    print 'TrainedClassifier already exists with name %s try to different name' % args.name
     sys.exit()
 
 if args.type == 'naivebayes':
@@ -142,6 +142,6 @@ row.stats = dict(
 row.save()
 
 
-print "TrainedClassifier saved with ID: %s  Name: %s" % (row.id, row.name)
+print 'TrainedClassifier saved with ID: %s  Name: %s' % (row.id, row.name)
 
 

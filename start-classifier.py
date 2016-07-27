@@ -16,7 +16,7 @@ pool = ClassifierWorkerPool()
 try:
 
     pool.start()
-    logger.info("started with size %s", len(pool.workers))
+    logger.info('started with size %s', len(pool.workers))
     while True:
         time.sleep(1)
 

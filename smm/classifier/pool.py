@@ -49,7 +49,7 @@ class ClassifierWorkerPool(object):
         row = TrainedClassifiers.objects(name=config.classifier).first()
 
         if not row:
-            raise Exception("Classifier %s does not exists" % config.classifier)
+            raise Exception('Classifier %s does not exists' % config.classifier)
 
         self.trained_classifier = row.get_classifier()
 

@@ -18,7 +18,7 @@ pool = WorkerPool()
 try:
 
     pool.start()
-    logger.info("started WorkerPool with size %s", len(pool.pool))
+    logger.info('started WorkerPool with size %s', len(pool.pool))
     while True:
         time.sleep(60)
         logging.info('RawStreamQueue size: %s', models.RawStreamQueue.objects.count())
