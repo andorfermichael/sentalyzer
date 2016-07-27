@@ -2,7 +2,7 @@ var mapOptions = {
   zoom: 3,
   center: new google.maps.LatLng(8.881928, 76.592758),
   mapTypeId: google.maps.MapTypeId.ROADMAP
-}
+};
 var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 var positiveHeatMapData = [];
@@ -87,19 +87,13 @@ var SMM = {
     },
     streamData: {
         data: [],
-        trend: {data: [], q: [], qSize: 10},
-        sums: {pCount: 0, nCount: 0, pSum: 0, nSum: 0 },
+        sums: {pCount: 0, nCount: 0, pSum: 0, nSum: 0},
         getData: function() {
             var d = [
                 {key: 'Tweets', color: 'green', values: SMM.streamData.data, type: 'line'}
             ];
 
             return d;
-        },
-        getTrendData: function() {
-            return [
-                {key: 'Polarity trend', color: 'gray', values: SMM.streamData.trend.data}
-            ];
         },
         getSumData: function() {
             if(SMM.streamData.sums.pSum + Math.abs(SMM.streamData.sums.nSum) == 0){
@@ -123,11 +117,11 @@ var SMM = {
             return [
                 {
                     key: 'Positive (%)',
-                    value: (SMM.streamData.sums.pCount / t)*100
+                    value: (SMM.streamData.sums.pCount / t) * 100
                 },
                 {
                     key: 'Negative (%)',
-                    value: (SMM.streamData.sums.nCount / t)*100
+                    value: (SMM.streamData.sums.nCount / t) * 100
                 }
             ];
         },
@@ -146,34 +140,47 @@ var SMM = {
                 positiveHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
             }
 
-            SMM.streamData.data.push(d0);
+            var tableRow = document.createElement('tr');
+            var textTableData = document.createElement('td');
+            var polarityTableData = document.createElement('td');
+            var tweetLocationTableData = document.createElement('td');
+            var userLocationTableData = document.createElement('td');
 
-            var d1 = {y: data.polarity, x: new Date(data.stamp)};
-            SMM.streamData.smooth(SMM.streamData.trend, d1);
+            var text = document.createTextNode(data.original.text);
+            var polarity = null;
 
-        },
-        smooth: function(container, d) {
-            container.q.push(d);
-            if (container.q.length > container.qSize) {
-                var x = container.q[0].x;
-                var y_sum = 0;
-
-                for (var j = 0; j < container.qSize; j++) {
-                    y_sum += container.q[0].y;
-                    container.q.shift();
-                }
-                var c = 'green';
-                if (y_sum / container.qSize < 0) {
-                    c = 'red';
-                }
-                var a = {
-                    y: y_sum / container.qSize,
-                    x: x,
-                    size: 2,
-                    color: c
-                };
-                container.data.push(a);
+            console.log(data.polarity);
+            if (data.polarity == 1) {
+                tableRow.className += 'td-green';
+                polarity = document.createTextNode('positive');
+            } else {
+                tableRow.className += 'td-red';
+                polarity = document.createTextNode('negative');
             }
+
+            var tweetLocation = document.createTextNode('n.a.');
+
+            if (data.original.full_name != null && data.original.country != null)
+                tweetLocation = document.createTextNode(data.original.full_name + ', ' + data.original.country);
+
+            var userLocation = document.createTextNode('n.a.');
+
+            if (data.original.user.location != null)
+                userLocation = document.createTextNode(data.original.user.location);
+
+            textTableData.appendChild(text);
+            polarityTableData.appendChild(polarity);
+            tweetLocationTableData.appendChild(tweetLocation);
+            userLocationTableData.appendChild(userLocation);
+
+            tableRow.appendChild(textTableData);
+            tableRow.appendChild(polarityTableData);
+            tableRow.appendChild(tweetLocationTableData);
+            tableRow.appendChild(userLocationTableData);
+
+            document.getElementsByTagName('tbody')[0].appendChild(tableRow);
+
+            SMM.streamData.data.push(d0);
         },
         clear: function() {
             //SMM.streamData.data = [];
@@ -184,8 +191,6 @@ var SMM = {
         chartPool: [],
         sumChartContainer: '#sum-chart svg',
         countChartContainer: '#count-chart svg',
-        polartyChartContainer: '#polarity-chart svg',
-        trendChartContainer: '#trend-chart svg',
         updateInt: 2000,
                 
         init: function() {
@@ -225,42 +230,11 @@ var SMM = {
                 chartCount.updateManual();
                 nv.utils.windowResize(chartCount.update);
                 SMM.charts.chartPool.push(chartCount);
-                
-                var chartDist = nv.models.scatterChart()
-                        .showDistX(true)
-                        .showDistY(true)
-                        .showLegend(false);
-
-                chartDist.xAxis.tickFormat(function(d) {
-                    return d3.time.format("%H:%M:%S")(new Date(d))
-                }).axisLabel('Time');
-                chartDist.yAxis.tickFormat(d3.format('.02f')).axisLabel('Polarity');
-                chartDist.tooltipContent(function(key, x, y, d) {
-                    return "<div class='tooltipContainer'>" + d.point.text + "</div>";
-                });
-
-                d3.select(SMM.charts.polartyChartContainer).datum(SMM.streamData.getData).transition().duration(200).call(chartDist);
-                nv.utils.windowResize(chartDist.update);
-
-                SMM.charts.chartPool.push(chartDist);
-
-                var chartTrend = nv.models.lineChart();
-                chartTrend.showLegend(false);
-                chartTrend.xAxis.tickFormat(function(d) {
-                    return d3.time.format("%H:%M:%S")(new Date(d))
-                }).axisLabel('Time');
-                chartTrend.yAxis.tickFormat(d3.format('.02f')).axisLabel('Polarity');
-
-                d3.select(SMM.charts.trendChartContainer).datum(SMM.streamData.getTrendData).transition().duration(200).call(chartTrend);
-                nv.utils.windowResize(chartTrend.update);
-
-                SMM.charts.chartPool.push(chartTrend);
             });
 
             setInterval(function() {
                 SMM.charts.redraw()
             }, SMM.charts.updateInt);
-
         },
         redraw: function() {
             for (var i in SMM.charts.chartPool) {

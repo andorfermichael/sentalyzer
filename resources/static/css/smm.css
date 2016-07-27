@@ -51,11 +51,14 @@ header.header nav a{
     #logo{display: none;}
 }
 
-#map_canvas { height: 100%;}
+#map_canvas {
+    height: 100%;
+}
 
 #totals{
     overflow: hidden;
-    float: left;
+    margin: auto;
+    width: 50%;
 }
 #totals .chart{
     margin-right: 10px;
@@ -68,33 +71,9 @@ header.header nav a{
     float: left;
 }
 
-#trend-chart{
-    width: auto;
-    margin-left: 825px;
-    height: 330px;
-}
-
-@media screen and (max-width: 1279px){
-    #trend-chart{
-        margin-left: 0;
-        clear: both;
-        margin-top: 20px;
-    }
-}
-
-#trend-chart svg{
-    width: 100%;
-}
-
-#polarity-chart svg{
-    height: 400px;
-}
-
-
 .chart header{
     text-align: center;
     font-weight: bold;
-    margin-top: 10px;
 }
 
 .chart {
@@ -106,6 +85,41 @@ header.header nav a{
     overflow: hidden;
     margin-bottom: 20px;
     padding-top: 10px;
+}
+
+header {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.tweet-table {
+    width: 100%;
+    margin-top: 75px;
+}
+
+table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    font-weight: normal;
+    padding: 8px 20px;
+}
+
+.td-green {
+    color: green;
+}
+
+.td-red {
+    color: red;
+}
+
+th {
+    background-color: dimgray;
+    color: white;
 }
 
 #tracking-form{
@@ -129,7 +143,6 @@ a {color: #4183C4;}
 button {
     width: 125px;
 }
-
 
 .infobox{
     padding: 20px;
@@ -157,5 +170,4 @@ button {
     -webkit-border-radius: 0 0 5px 5px;
     border-radius: 0 0 5px 5px;
     position: relative;
-    
 }

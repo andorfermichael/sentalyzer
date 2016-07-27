@@ -26,9 +26,8 @@
             </form>
         </header>
         <div id="error-msg" style="display: none;"><section></section></div>
-        <div class="row"></div>
         <div class="row">
-            <div id="totals" >
+            <div id="totals">
                 <div id="count-chart" class="totals-chart chart">
                     <header>Tweet count in %</header>
                     <svg></svg>
@@ -38,14 +37,25 @@
                     <svg></svg>
                 </div>
             </div>
-            <div id="trend-chart" class="chart" >
-                <header>Polarity trend over time</header>
-                <svg></svg>
-            </div>
         </div>
-        <div style="height:100%; width:100%;">
-             <div id="map_canvas"></div>
+        <div style="height:100%; width:100%;" class="chart">
+            <header>Heatmap</header>
+            <div id="map_canvas"></div>
         </div>
+        <div id="tweet-table" class="tweet-table chart">
+            <header>Tweet Information</header>
+            <table>
+                <thead>
+                    <th>Text</th>
+                    <th>Polarity</th>
+                    <th>Tweet Location</th>
+                    <th>User Location</th>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
         <script src="/static/js/jquery-2.2.3.min.js"></script>
         <script src="/static/js/socket.io.js"></script>
         <script src="/static/js/d3.v3.js"></script>
