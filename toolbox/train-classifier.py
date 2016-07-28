@@ -51,7 +51,7 @@ all_words = []
 documents = []
 
 # j is adject, r is adverb, and v is verb
-allowed_word_types = ["J", "R", "V"]
+allowed_word_types = ['J', 'R', 'V']
 
 # Get English stopwords
 stops = set(stopwords.words('english'))
@@ -59,7 +59,7 @@ stops = set(stopwords.words('english'))
 # Annotate positive documents
 logger.info('Start creating documents out of positive reviews.')
 for p in pos_reviews.split('\n'):
-    documents.append((p, "pos"))
+    documents.append((p, 'pos'))
 
     # Split up into words
     words = word_tokenize(p)
@@ -74,7 +74,7 @@ logger.info('Finished creating documents out of positive reviews.')
 # Annotate negative documents
 logger.info('Start creating documents out of negative reviews.')
 for p in neg_reviews.split('\n'):
-    documents.append((p, "neg"))
+    documents.append((p, 'neg'))
 
     # Split up into words
     words = word_tokenize(p)
@@ -89,7 +89,7 @@ logger.info('Finished creating documents out of negative reviews.')
 if pickle:
     # Save the documents
     logger.info('Start packing documents as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/documents.pickle.')
-    save_documents = open("data/pickles/documents.pickle", "wb")
+    save_documents = open('data/pickles/documents.pickle', 'wb')
     pickle.dump(documents, save_documents)
     save_documents.close()
     logger.info('Finished packing documents as pickle.')
@@ -104,7 +104,7 @@ word_features = list(all_words.keys())[:10000]
 if pickle:
     # Save the word features
     logger.info('Start packing word features as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/word_features.pickle.')
-    save_word_features = open("data/pickles/word_features.pickle", "wb")
+    save_word_features = open('data/pickles/word_features.pickle', 'wb')
     pickle.dump(word_features, save_word_features)
     save_word_features.close()
     logger.info('Finished packing word features as pickle.')
@@ -125,7 +125,7 @@ logger.info('Finished creating feature set from documents.')
 
 if pickle:
     logger.info('Start packing word features as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/featuresets.pickle.')
-    save_feature_sets = open("data/pickles/featuresets.pickle", "wb")
+    save_feature_sets = open('data/pickles/featuresets.pickle', 'wb')
     pickle.dump(featuresets, save_feature_sets)
     save_feature_sets.close()
     logger.info('Finished packing feature set from documents.')
@@ -150,7 +150,7 @@ cls = classification.Classifier(training_set, testing_set, args.type)
 models.connect()
 
 if models.TrainedClassifiers.objects(name = args.name).count():
-    print "TrainedClassifier already exists with name %s try to different name" % args.name
+    print 'TrainedClassifier already exists with name %s try to different name' % args.name
     sys.exit()
 
 if args.type == 'naivebayes':
@@ -219,6 +219,6 @@ row.stats = dict(
 row.save()
 
 
-print "TrainedClassifier saved with ID: %s  Name: %s" % (row.id, row.name)
+print 'TrainedClassifier saved with ID: %s  Name: %s' % (row.id, row.name)
 
 

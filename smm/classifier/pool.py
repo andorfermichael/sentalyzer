@@ -39,17 +39,17 @@ class QueueFeeder(Process):
 
 
 class ClassifierWorkerPool(object):
-    def __init__(self):
+    def __init__(self, classifier):
         self.queue = Queue(100)
         self.workers = []
         self.stop = Event()
         self.stop.clear()
         self.queue_feeder = QueueFeeder(self.queue, self.stop)
 
-        row = TrainedClassifiers.objects(name=config.classifier).first()
+        row = TrainedClassifiers.objects(name=classifier).first()
 
         if not row:
-            raise Exception('Classifier %s does not exists' % config.classifier)
+            raise Exception('Classifier %s does not exists' % classifier)
 
         self.trained_classifier = row.get_classifier()
 
