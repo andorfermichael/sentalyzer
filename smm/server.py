@@ -29,7 +29,8 @@ def index():
 @app.route('/results')
 def results():
     keyword = request.args.get('keyword', '')
-    return render_template('results.html', keyword=keyword)
+    geotagged = request.args.get('geotagged', '')
+    return render_template('results.html', keyword=keyword, geotagged=geotagged)
 
 
 class StreamNamespace(BaseNamespace):

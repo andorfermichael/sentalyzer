@@ -1,14 +1,14 @@
 html { height: 100% }
 body { height: 100%; margin: 0; padding: 0 }
 
-body{
+body {
     margin: 0;
     padding: 0;
     background-image: url('../img/bg.png');
     font-family: Verdana, "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif
 }
 
-header.header{
+header.header {
     text-align: center;
     background-color: #000000;
     border-bottom: 1px solid #aaa;
@@ -20,19 +20,19 @@ header.header{
     position: relative;
     z-index: 1;
 }
-header.header nav{
+header.header nav {
     position: absolute;
     top: 112px;
     left: 30px;
     color: #777;
 }
 
-header.header nav a{
+header.header nav a {
     color: #777;
     margin-right: 5px;
 }
 
-#logo{
+#logo {
     overflow: hidden;
     text-align: left;
     color: #ffffff;
@@ -40,61 +40,84 @@ header.header nav a{
     float: left;
     padding: 20px;
 }
-#logo h1{
+#logo h1 {
     margin: 0;
 }
-#logo h1 a{
+#logo h1 a {
     text-decoration: none;
     color: #ffffff;;
 }
-@media screen and (max-width: 620px){
-    #logo{display: none;}
+
+.heatmap {
+    /*display: none;*/
+}
+
+.tweet-location {
+    display: none;
 }
 
 #map_canvas {
     height: 100%;
+    margin-top: 10px;
 }
 
-#totals{
+#totals {
     overflow: hidden;
     margin: auto;
-    width: 50%;
+    width: 825px;
 }
-#totals .chart{
-    margin-right: 10px;
-}
-.totals-chart svg{
-    height: 300px;
+#totals .chart {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 15px;
     width: 400px;
-}
-.totals-chart {
+    border: 1px solid #eee;
     float: left;
 }
 
-.chart header{
+@media (max-width: 840px) {
+    #logo { display: none; }
+
+    #totals .chart {
+        float: none;
+    }
+
+    #totals {
+        width: 400px;
+    }
+
+    #tracking-form {
+        width: 260px;
+        margin: auto;
+    }
+}
+
+.totals-chart svg {
+    height: 300px;
+    width: 400px;
+}
+
+.chart header {
     text-align: center;
     font-weight: bold;
+    padding-top: 20px;
+    margin-bottom: 15px;
 }
 
 .chart {
-    border: 1px solid #eee;
     background-color: white;
 }
 
-.row{
+.row {
     overflow: hidden;
     margin-bottom: 20px;
     padding-top: 10px;
 }
 
-header {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
 .tweet-table {
     width: 100%;
     margin-top: 75px;
+    overflow-x: auto;
 }
 
 table {
@@ -125,32 +148,50 @@ th {
 #tracking-form{
     margin-top: 20px;
     text-align: left;
-    float: left;
     color: #ffffff
 }
 
-input{
+input {
     border: 1px solid #aaa;
     padding: 2px;
     width: 250px;
 }
 
-input.loading{
+input.loading {
     background: #ffffff url("/static/img/loader.gif") no-repeat scroll right center !important;
 }
-a {color: #4183C4;}
+a { color: #4183C4; }
 
 button {
     width: 125px;
 }
 
-.infobox{
+button:disabled {
+    background-color: white;
+    border-radius: 4px;
+    border-color: transparent;
+    height: 18px;
+    padding: 0;
+}
+
+input[type="checkbox"] {
+    width: auto;
+}
+
+.geotagged {
+    font-size: 14px;
+    color: white;
+    display: inline-block;
+    margin: 0;
+}
+
+.infobox {
     padding: 20px;
     border: 1px solid #eee;
     margin-top: 20px;
     background-color: white;
 }
-.txt-left{
+.txt-left {
     text-align: left;
     color: #ffffff
 }
@@ -159,7 +200,7 @@ button {
     text-align: center;
 }
 
-#error-msg section{
+#error-msg section {
     color: #d62728;
     width: 450px;
     background-color: #eee;

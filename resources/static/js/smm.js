@@ -1,8 +1,23 @@
+$(document).ready(function(){
+    if ($('#geotagged').data('checked') == 'on') {
+        $('.heatmap').show();
+        $('.tweet-location').show();
+        $('#geotagged').attr('checked', true);
+        $('tbody').empty();
+    } else {
+        $('.heatmap').hide();
+        $('.tweet-location').hide();
+        $('#geotagged').removeAttr('checked');
+        $('tbody').empty();
+    }
+});
+
 var mapOptions = {
-  zoom: 3,
-  center: new google.maps.LatLng(8.881928, 76.592758),
-  mapTypeId: google.maps.MapTypeId.ROADMAP
+    zoom: 2,
+    center: new google.maps.LatLng(0, 0),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
 };
+
 var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 var positiveHeatMapData = [];
@@ -38,6 +53,7 @@ var SMM = {
     streamChannel: {
         stopTracking: '#stop-tracking',
         restartTracking: '#restart-tracking',
+        geoTagged: '#geotagged',
         stream: null,
         listen: function(kw) {
 
@@ -54,7 +70,6 @@ var SMM = {
                 $("#keyword").removeClass('loading');
                 SMM.stream.disconnect();
                 SMM.stream = null;
-                
             });
 
             $(SMM.streamChannel.stopTracking).click(function() {
@@ -62,6 +77,8 @@ var SMM = {
                 SMM.stream = null;
                 $("#keyword").removeClass('loading');
                 $(this).attr('disabled','disabled');
+                $('#geotagged').removeAttr('disabled');
+                $('#restart-tracking').removeAttr('disabled');
                 return false;
             });
 
@@ -69,6 +86,16 @@ var SMM = {
                 SMM.stream.disconnect();
                 SMM.stream = null;
                 $(this).submit();
+                $('#geotagged').disabled(true);
+                $('#restart-tracking').disabled(true);
+            });
+
+            $(SMM.streamChannel.geoTagged).click(function() {
+                SMM.stream = null;
+                SMM.streamData.clear();
+                $(this).submit();
+                $('.nv-pieChart').remove();
+                $('tbody').empty();
             });
             
             SMM.stream.emit('track', kw);
@@ -126,65 +153,106 @@ var SMM = {
             ];
         },
         push: function(data) {
-
             var d0 = {y: data.polarity, x: new Date(data.stamp), size: 0.2, text: data.text};
+            if (document.getElementById('geotagged').checked) {
+                if (data.original.geo != null && data.original.place != null) {
+                    if (data.polarity < 0) {
+                        d0.color = 'red';
+                        SMM.streamData.sums.nCount += 1;
+                        SMM.streamData.sums.nSum += d0.y;
+                        negativeHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
+                    } else {
+                        SMM.streamData.sums.pCount += 1;
+                        SMM.streamData.sums.pSum += d0.y;
+                        positiveHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
+                    }
 
-            if (data.polarity < 0) {
-                d0.color = 'red';
-                SMM.streamData.sums.nCount += 1;
-                SMM.streamData.sums.nSum += d0.y;
-                negativeHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
+                    var tableRow = document.createElement('tr');
+                    var textTableData = document.createElement('td');
+                    var polarityTableData = document.createElement('td');
+                    var tweetLocationTableData = document.createElement('td');
+                    var userLocationTableData = document.createElement('td');
+
+                    var text = document.createTextNode(data.original.text);
+                    var polarity = null;
+
+                    if (data.polarity == 1) {
+                        tableRow.className += 'td-green';
+                        polarity = document.createTextNode('positive');
+                    } else {
+                        tableRow.className += 'td-red';
+                        polarity = document.createTextNode('negative');
+                    }
+
+                    var tweetLocation = document.createTextNode('n.a.');
+
+                    if (data.original.place.full_name != null && data.original.place.country != null)
+                        tweetLocation = document.createTextNode(data.original.place.full_name + ', ' + data.original.place.country);
+
+                    var userLocation = document.createTextNode('n.a.');
+
+                    if (data.original.user.location != null)
+                        userLocation = document.createTextNode(data.original.user.location);
+
+                    textTableData.appendChild(text);
+                    polarityTableData.appendChild(polarity);
+                    tweetLocationTableData.appendChild(tweetLocation);
+                    userLocationTableData.appendChild(userLocation);
+
+                    tableRow.appendChild(textTableData);
+                    tableRow.appendChild(polarityTableData);
+                    tableRow.appendChild(tweetLocationTableData);
+                    tableRow.appendChild(userLocationTableData);
+
+                    document.getElementsByTagName('tbody')[0].appendChild(tableRow);
+                }
             } else {
-                SMM.streamData.sums.pCount += 1;
-                SMM.streamData.sums.pSum += d0.y;
-                positiveHeatMapData.push(new google.maps.LatLng(data.original.geo.coordinates[0], data.original.geo.coordinates[1]));
+                if (data.polarity < 0) {
+                    d0.color = 'red';
+                    SMM.streamData.sums.nCount += 1;
+                    SMM.streamData.sums.nSum += d0.y;
+                } else {
+                    SMM.streamData.sums.pCount += 1;
+                    SMM.streamData.sums.pSum += d0.y;
+                }
+
+                var tableRow = document.createElement('tr');
+                var textTableData = document.createElement('td');
+                var polarityTableData = document.createElement('td');
+                var userLocationTableData = document.createElement('td');
+
+                var text = document.createTextNode(data.original.text);
+                var polarity = null;
+
+                if (data.polarity == 1) {
+                    tableRow.className += 'td-green';
+                    polarity = document.createTextNode('positive');
+                } else {
+                    tableRow.className += 'td-red';
+                    polarity = document.createTextNode('negative');
+                }
+
+                var userLocation = document.createTextNode('n.a.');
+
+                if (data.original.user.location != null)
+                    userLocation = document.createTextNode(data.original.user.location);
+
+                textTableData.appendChild(text);
+                polarityTableData.appendChild(polarity);
+                userLocationTableData.appendChild(userLocation);
+
+                tableRow.appendChild(textTableData);
+                tableRow.appendChild(polarityTableData);
+                tableRow.appendChild(userLocationTableData);
+
+                document.getElementsByTagName('tbody')[0].appendChild(tableRow);
             }
-
-            var tableRow = document.createElement('tr');
-            var textTableData = document.createElement('td');
-            var polarityTableData = document.createElement('td');
-            var tweetLocationTableData = document.createElement('td');
-            var userLocationTableData = document.createElement('td');
-
-            var text = document.createTextNode(data.original.text);
-            var polarity = null;
-
-            console.log(data.polarity);
-            if (data.polarity == 1) {
-                tableRow.className += 'td-green';
-                polarity = document.createTextNode('positive');
-            } else {
-                tableRow.className += 'td-red';
-                polarity = document.createTextNode('negative');
-            }
-
-            var tweetLocation = document.createTextNode('n.a.');
-
-            if (data.original.full_name != null && data.original.country != null)
-                tweetLocation = document.createTextNode(data.original.full_name + ', ' + data.original.country);
-
-            var userLocation = document.createTextNode('n.a.');
-
-            if (data.original.user.location != null)
-                userLocation = document.createTextNode(data.original.user.location);
-
-            textTableData.appendChild(text);
-            polarityTableData.appendChild(polarity);
-            tweetLocationTableData.appendChild(tweetLocation);
-            userLocationTableData.appendChild(userLocation);
-
-            tableRow.appendChild(textTableData);
-            tableRow.appendChild(polarityTableData);
-            tableRow.appendChild(tweetLocationTableData);
-            tableRow.appendChild(userLocationTableData);
-
-            document.getElementsByTagName('tbody')[0].appendChild(tableRow);
 
             SMM.streamData.data.push(d0);
         },
         clear: function() {
-            //SMM.streamData.data = [];
-            //SMM.streamData.trend = { data:[], q : [], qSize: 10};
+            SMM.streamData.data = [];
+            SMM.streamData.sums = {pCount: 0, nCount: 0, pSum: 0, nSum: 0}
         }
     },
     charts: {

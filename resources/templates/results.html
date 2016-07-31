@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width">
         <meta charset="utf-8">
         <link href="/static/css/nv.d3.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=API-KEY&libraries=visualization&sensor=true_or_false"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYNLFPZzq81gy1tUUeAGYeREYX9A_cqvA&libraries=visualization&sensor=false"></script>
     </head>
     <body>
         <header class="header">
@@ -18,10 +18,11 @@
                 <div>
                     <div class="txt-left" ><strong>Searching for:</strong></div>
                     <input type="text" name="keyword" value="{{keyword}}" id="keyword" class="loading">
+                    <input type="checkbox" id="geotagged" name="geotagged" data-checked="{{geotagged}}" disabled><p class="geotagged">geotagged only</p><br>
                 </div>
                 <div class="row">
                     <button id="stop-tracking">Stop searching</button>
-                    <button id="restart-tracking">Restart search</button>
+                    <button id="restart-tracking" disabled>Restart search</button>
                 </div>
             </form>
         </header>
@@ -38,7 +39,7 @@
                 </div>
             </div>
         </div>
-        <div style="height:100%; width:100%;" class="chart">
+        <div style="height:100%; width:100%;" class="chart heatmap">
             <header>Heatmap</header>
             <div id="map_canvas"></div>
         </div>
@@ -48,7 +49,7 @@
                 <thead>
                     <th>Text</th>
                     <th>Polarity</th>
-                    <th>Tweet Location</th>
+                    <th class="tweet-location">Tweet Location</th>
                     <th>User Location</th>
                 </thead>
                 <tbody>

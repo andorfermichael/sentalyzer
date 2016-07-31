@@ -102,7 +102,7 @@ class TwitterWorker(DataStreamAbstract):
             logger.debug('RawStreamQueue saved with id %s', o.id)
 
     def is_tweet_valid(self, tweet):
-        if tweet and not 'delete' in tweet and 'lang' in tweet and tweet['lang'] == 'en' and 'text' in tweet and tweet['geo'] != None:
+        if tweet and not 'delete' in tweet and 'lang' in tweet and tweet['lang'] == 'en' and 'text' in tweet:
             return True
         else:
             return False
