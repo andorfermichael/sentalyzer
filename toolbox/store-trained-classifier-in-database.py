@@ -83,34 +83,34 @@ if models.TrainedClassifiers.objects(name = args.name).count():
     sys.exit()
 
 if args.type == 'naivebayes':
-    resultClassifier = cls.run_naivebayes(False)
+    resultClassifier = cls.run_naivebayes(False, False)
 
 elif args.type == 'multinomialnb':
-    resultClassifier = cls.run_multinomialnb(False)
+    resultClassifier = cls.run_multinomialnb(False, False)
 
 elif args.type == 'bernoullinb':
-    resultClassifier = cls.run_bernoullinb(False)
+    resultClassifier = cls.run_bernoullinb(False, False)
 
 elif args.type == 'logisticregression':
-    resultClassifier = cls.run_logisticregression(False)
+    resultClassifier = cls.run_logisticregression(False, False)
 
 elif args.type == 'sgd':
-    resultClassifier = cls.run_sgd(False)
+    resultClassifier = cls.run_sgd(False, False)
 
 elif args.type == 'linearsvc':
-    resultClassifier = cls.run_linearsvc(False)
+    resultClassifier = cls.run_linearsvc(False, False)
 
 elif args.type == 'nusvc':
-    resultClassifier = cls.run_nusvc(False)
+    resultClassifier = cls.run_nusvc(False, False)
 
 elif args.type == 'voteclassifier':
-    naivebayes_classifier = cls.run_naivebayes(False)
-    mnb_classifier = cls.run_multinomialnb(False)
-    bernoullinb_classifier = cls.run_bernoullinb(False)
-    logisticregression_classifier = cls.run_logisticregression(False)
-    sgd_classifier = cls.run_sgd(False)
-    linearsvc_classifier = cls.run_linearsvc(False)
-    nusvc_classifier = cls.run_nusvc(False)
+    naivebayes_classifier = cls.run_naivebayes(False, False)
+    mnb_classifier = cls.run_multinomialnb(False, False)
+    bernoullinb_classifier = cls.run_bernoullinb(False, False)
+    logisticregression_classifier = cls.run_logisticregression(False, False)
+    sgd_classifier = cls.run_sgd(False, False)
+    linearsvc_classifier = cls.run_linearsvc(False, False)
+    nusvc_classifier = cls.run_nusvc(False, False)
 
     resultClassifier = classification.VoteClassifier(
         naivebayes_classifier,
@@ -135,8 +135,8 @@ row = models.TrainedClassifiers()
 row.name = args.name
 row.set_classifier(resultClassifier)
 row.stats = dict(
-    classifier = cls.name,
-    accuracy = cls.accuracy
+    classifier=cls.name,
+    accuracy=cls.accuracy
 )
 
 row.save()

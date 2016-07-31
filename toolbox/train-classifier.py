@@ -24,8 +24,8 @@ from nltk.tokenize import word_tokenize
 parser = argparse.ArgumentParser(description='classify collected reviews', usage='python train-classification.py classifier 10000')
 parser.add_argument('name', help='classifier name - must be unique')
 parser.add_argument('size', type=int, help='corpus size - how much documents to classify')
-parser.add_argument('pickle', help='store results not only in database but also as pickle files', choices=['yes', 'no'])
-parser.add_argument('-t', '--type', help='Classifier type', default='voteclassifier')
+parser.add_argument('pickling', help='store results not only in database but also as pickle files', choices=['yes', 'no'])
+parser.add_argument('-t', '--type', help='classifier type', default='voteclassifier')
 args = parser.parse_args()
 
 argcomplete.autocomplete(parser)
@@ -34,10 +34,10 @@ argcomplete.autocomplete(parser)
 logger = logging.getLogger('train-classifier')
 
 # Pickle
-if args.pickle == 'yes':
-    pickle = True
+if args.pickling == 'yes':
+    pickling = True
 else:
-    pickle = False
+    pickling = False
 
 # Load the reviews
 pos_corpus = CategorizedPlaintextCorpusReader(config.basepath + config.reviews_path + '/pos/', r'(?!\.).*\.txt', cat_pattern=r'(pos)/.*', encoding='ascii')
@@ -86,7 +86,7 @@ for p in neg_reviews.split('\n'):
             all_words.append(w[0].lower())
 logger.info('Finished creating documents out of negative reviews.')
 
-if pickle:
+if pickling:
     # Save the documents
     logger.info('Start packing documents as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/documents.pickle.')
     save_documents = open('data/pickles/documents.pickle', 'wb')
@@ -101,7 +101,7 @@ all_words = nltk.FreqDist(all_words)
 logger.info('Create word feature set of 10,000 most frequent words.')
 word_features = list(all_words.keys())[:10000]
 
-if pickle:
+if pickling:
     # Save the word features
     logger.info('Start packing word features as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/word_features.pickle.')
     save_word_features = open('data/pickles/word_features.pickle', 'wb')
@@ -123,7 +123,7 @@ logger.info('Start creating feature set from documents.')
 featuresets = [(find_features(rev), category) for (rev, category) in documents]
 logger.info('Finished creating feature set from documents.')
 
-if pickle:
+if pickling:
     logger.info('Start packing word features as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/featuresets.pickle.')
     save_feature_sets = open('data/pickles/featuresets.pickle', 'wb')
     pickle.dump(featuresets, save_feature_sets)
@@ -154,34 +154,34 @@ if models.TrainedClassifiers.objects(name = args.name).count():
     sys.exit()
 
 if args.type == 'naivebayes':
-    resultClassifier = cls.run_naivebayes(True, pickle)
+    resultClassifier = cls.run_naivebayes(True, pickling)
 
 elif args.type == 'multinomialnb':
-    resultClassifier = cls.run_multinomialnb(True, pickle)
+    resultClassifier = cls.run_multinomialnb(True, pickling)
 
 elif args.type == 'bernoullinb':
-    resultClassifier = cls.run_bernoullinb(True, pickle)
+    resultClassifier = cls.run_bernoullinb(True, pickling)
 
 elif args.type == 'logisticregression':
-    resultClassifier = cls.run_logisticregression(True, pickle)
+    resultClassifier = cls.run_logisticregression(True, pickling)
 
 elif args.type == 'sgd':
-    resultClassifier = cls.run_sgd(True, pickle)
+    resultClassifier = cls.run_sgd(True, pickling)
 
 elif args.type == 'linearsvc':
-    resultClassifier = cls.run_linearsvc(True, pickle)
+    resultClassifier = cls.run_linearsvc(True, pickling)
 
 elif args.type == 'nusvc':
-    resultClassifier = cls.run_nusvc(True, pickle)
+    resultClassifier = cls.run_nusvc(True, pickling)
 
 elif args.type == 'voteclassifier':
-    naivebayes_classifier = cls.run_naivebayes(True, pickle)
-    mnb_classifier = cls.run_multinomialnb(True, pickle)
-    bernoullinb_classifier = cls.run_bernoullinb(True, pickle)
-    logisticregression_classifier = cls.run_logisticregression(True, pickle)
-    sgd_classifier = cls.run_sgd(True, pickle)
-    linearsvc_classifier = cls.run_linearsvc(True, pickle)
-    nusvc_classifier = cls.run_nusvc(True, pickle)
+    naivebayes_classifier = cls.run_naivebayes(True, pickling)
+    mnb_classifier = cls.run_multinomialnb(True, pickling)
+    bernoullinb_classifier = cls.run_bernoullinb(True, pickling)
+    logisticregression_classifier = cls.run_logisticregression(True, pickling)
+    sgd_classifier = cls.run_sgd(True, pickling)
+    linearsvc_classifier = cls.run_linearsvc(True, pickling)
+    nusvc_classifier = cls.run_nusvc(True, pickling)
 
     resultClassifier = VoteClassifier(
         naivebayes_classifier,
@@ -197,7 +197,7 @@ elif args.type == 'voteclassifier':
     resultClassifier.accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
     logger.info('Finished accuracy calculation of Vote Classifier.')
 
-    if pickle:
+    if pickling:
         logger.info('Start packing Vote Classifier as pickle to ' + os.path.dirname(os.path.abspath(__file__)) + '/data/pickles/vote_classifier.pickle.')
         save_classifier = open('data/pickles/naivebayes_classifier.pickle', 'wb')
         pickle.dump(resultClassifier, save_classifier)
@@ -212,8 +212,8 @@ row = models.TrainedClassifiers()
 row.name = args.name
 row.set_classifier(resultClassifier)
 row.stats = dict(
-    classifier = cls.name,
-    accuracy = cls.accuracy
+    classifier=cls.name,
+    accuracy=cls.accuracy
 )
 
 row.save()

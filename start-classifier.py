@@ -9,9 +9,7 @@ from smm import models
 logger = logging.getLogger('start-classifier')
 
 parser = argparse.ArgumentParser(description='classify tweets', usage='python start-classifier classifier')
-parser.add_argument('classifier', help='classifier name',
-                    choices=['naivebayes', 'multinomialnb', 'bernoullinb', 'logisticregression', 'sgd',
-                             'linearsvc', 'nusvc', 'voteclassifier'])
+parser.add_argument('classifier', help='classifier name')
 args = parser.parse_args()
 
 # connect to db
