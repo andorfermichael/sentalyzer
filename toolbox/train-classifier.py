@@ -22,12 +22,12 @@ from nltk.corpus import CategorizedPlaintextCorpusReader
 from nltk.tokenize import word_tokenize
 
 parser = argparse.ArgumentParser(description='classify collected reviews',
-                                 usage='python train-classification.py classifier 10000')
+                                 usage='python train-classification.py classifier 10000 yes')
 parser.add_argument('name', help='classifier name - must be unique')
 parser.add_argument('size', type=int, help='corpus size - how much documents to classify')
 parser.add_argument('pickling', help='store results not only in database but also as pickle files',
                     choices=['yes', 'no'])
-parser.add_argument('-t', '--type', help='classifier type', default='voteclassifier')
+parser.add_argument('-t', '--type', help='classifier type', default='naivebayes')
 args = parser.parse_args()
 
 argcomplete.autocomplete(parser)
@@ -185,37 +185,6 @@ elif args.type == 'linearsvc':
 
 elif args.type == 'nusvc':
     resultClassifier = cls.run_nusvc(True, pickling)
-
-elif args.type == 'voteclassifier':
-    naivebayes_classifier = cls.run_naivebayes(True, pickling)
-    mnb_classifier = cls.run_multinomialnb(True, pickling)
-    bernoullinb_classifier = cls.run_bernoullinb(True, pickling)
-    logisticregression_classifier = cls.run_logisticregression(True, pickling)
-    sgd_classifier = cls.run_sgd(True, pickling)
-    linearsvc_classifier = cls.run_linearsvc(True, pickling)
-    nusvc_classifier = cls.run_nusvc(True, pickling)
-
-    resultClassifier = VoteClassifier(
-        naivebayes_classifier,
-        mnb_classifier,
-        bernoullinb_classifier,
-        logisticregression_classifier,
-        sgd_classifier,
-        linearsvc_classifier,
-        nusvc_classifier
-    )
-
-    logger.info('Started accuracy calculation of Vote Classifier.')
-    resultClassifier.accuracy = (nltk.classify.accuracy(cls, testing_set)) * 100
-    logger.info('Finished accuracy calculation of Vote Classifier.')
-
-    if pickling:
-        logger.info('Start packing Vote Classifier as pickle to ' + os.path.dirname(
-            os.path.abspath(__file__)) + '/data/pickles/vote_classifier.pickle.')
-        save_classifier = open('data/pickles/naivebayes_classifier.pickle', 'wb')
-        pickle.dump(resultClassifier, save_classifier)
-        save_classifier.close()
-        logger.info('Finished packing Vote Classifier as pickle.')
 else:
     print '%s is not valid classifier type' % args.type
     sys.exit()
