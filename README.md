@@ -36,13 +36,6 @@ Download and install required libs and data
     python toolbox/setup-app.py
 
 
-Testing
--------
-Run unittests
-
-    python -m unittest discover tests
-
-
 Providing data
 ---------------------
 Provide data in raw format e.g
@@ -65,20 +58,17 @@ Available classifiers
 - Stochastic Gradient Descent (used in command as "sgd")
 - Linear Support Vector Classification (used in command as "linearsvc")
 - Nu Support Vector Classifcation (used in command as "nusvc")
-- Vote Classifier (used in command as "voteclassifier")
-
-The `Vote Classifier` combines the results of all above mentioned classifiers.
 
 
 Train classifier
 ----------------
 Create and save new classifier trained from raw data (or pickled classifier)
 
-    python toolbox/train-classifier.py myClassifier numberOfDocuments
+    python toolbox/train-classifier.py myClassifier numberOfDocuments pickling
 
 Load and save new classifier from already trained raw data (or pickled classifier)
 
-    python toolbox/store-trained-classifier-in-database.py myClassifier numberOfDocuments
+    python toolbox/store-trained-classifier-in-database.py myClassifier numberOfDocuments pathToPickle
 
 for more options see
 
